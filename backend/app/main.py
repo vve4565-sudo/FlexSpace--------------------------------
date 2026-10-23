@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from midlleware.rate_limiter import RateLimitMiddleware
 
 from .admin import AdminModels, AdminView
 from .api import router as main_router
@@ -15,7 +16,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(main_router)
-
+app.add_middleware(RateLimitMiddleware)
 
 admin = AdminView(
     app,
