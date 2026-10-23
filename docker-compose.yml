@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: eb218ee4261563066b420c781b705387
+      POSTGRES_DB: FlexSpace
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql_flexspace/data
+    restart: no
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes: 
+      - redis_data:/var/lib/redis_flexspace/data
+
+  backend:
+    image: backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    container_name: backend
+    restart: no
+    ports:
+      - 8080:8080
+    volumes: 
+      - backend_data:/var/lib/backend_flexspace/data
+
+volumes:
+  postgres_data:
+  redis_data:
+  backend_data:
